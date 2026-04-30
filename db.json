@@ -1,0 +1,18 @@
+{
+  "employees": [
+    { "id": 1, "name": "Alice Martin", "email": "alice@erp.com", "department": "RH", "role": "Manager", "salary": 55000, "status": "active" },
+    { "id": 2, "name": "Bob Dupont", "email": "bob@erp.com", "department": "IT", "role": "Developer", "salary": 48000, "status": "active" },
+    { "id": 3, "name": "Carol Simon", "email": "carol@erp.com", "department": "Finance", "role": "Analyst", "salary": 52000, "status": "inactive" }
+  ],
+  "products": [
+    { "id": 1, "name": "Ordinateur Dell", "sku": "PC-001", "price": 899.99, "stock": 25, "category": "Informatique" },
+    { "id": 2, "name": "Chaise Ergonomique", "sku": "MB-002", "price": 349.99, "stock": 8, "category": "Mobilier" }
+  ],
+  "orders": [
+    { "id": 1, "reference": "CMD-2024-001", "employeeId": 1, "total": 1249.98, "status": "delivered", "date": "2024-01-15" },
+    { "id": 2, "reference": "CMD-2024-002", "employeeId": 2, "total": 349.99, "status": "pending", "date": "2024-01-20" }
+  ],
+  "users": [
+    { "id": 1, "email": "admin@erp.com", "password": "admin123", "role": "admin", "name": "Admin ERP" }
+  ]
+}
