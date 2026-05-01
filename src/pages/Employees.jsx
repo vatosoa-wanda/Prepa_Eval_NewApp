@@ -4,6 +4,7 @@ function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
  
   // Chargement des employés au montage du composant
   useEffect(() => {
@@ -24,6 +25,17 @@ function EmployeeList() {
       });
   }, []);
 
+  // Filtrer les employés selon le terme de recherche
+  const filteredEmployees = employees.filter(employee => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      employee.name?.toLowerCase().includes(searchLower) ||
+      employee.position?.toLowerCase().includes(searchLower) ||
+      employee.email?.toLowerCase().includes(searchLower) ||
+      employee.id?.toString().includes(searchLower)
+    );
+  });
+
   // Affichage pendant le chargement
   if (loading) {
     return <div>Chargement des employés...</div>;
@@ -39,6 +51,22 @@ function EmployeeList() {
     <div>
       <h1>Liste des employés</h1>
       
+      <div style={{ marginBottom: "20px" }}>
+        {/* Barre de recherche */}
+        <input
+          type="text"
+          placeholder="Rechercher un employé..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        {searchTerm && (
+          <span style={{ marginLeft: "10px", color: "#666" }}>
+            {filteredEmployees.length} résultat(s) trouvé(s)
+          </span>
+        )}
+      </div>
+      
       <table border="1">
         <thead>
           <tr>
@@ -49,14 +77,22 @@ function EmployeeList() {
           </tr>
         </thead>
         <tbody>
-          {employees.map(employee => (
-            <tr key={employee.id}>
-              <td>{employee.id}</td>
-              <td>{employee.name}</td>
-              <td>{employee.position}</td>
-              <td>{employee.email}</td>
+          {filteredEmployees.length === 0 ? (
+            <tr>
+              <td colSpan="4" style={{ padding: "20px", textAlign: "center" }}>
+                Aucun employé ne correspond à votre recherche
+              </td>
             </tr>
-          ))}
+          ) :(
+            filteredEmployees.map(employee => (
+              <tr key={employee.id}>
+                <td style={{ padding: "8px" }}>{employee.id}</td>
+                <td style={{ padding: "8px" }}>{employee.name}</td>
+                <td style={{ padding: "8px" }}>{employee.position}</td>
+                <td style={{ padding: "8px" }}>{employee.email}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
