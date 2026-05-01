@@ -3,27 +3,64 @@ import { useState, useEffect } from "react";
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
  
-  // Déclenché UNE FOIS au montage (tableau vide [])
+  // Chargement des employés au montage du composant
   useEffect(() => {
     fetch("http://localhost:3001/employees")
-      .then(res => res.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erreur lors du chargement des employés");
+        }
+        return response.json();
+      })
       .then(data => {
         setEmployees(data);
         setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
       });
-  }, []);  // ← dépendances vides = exécution au montage seulement
- 
-  // Déclenché quand searchTerm change
-  useEffect(() => {
-    console.log("Recherche:", searchTerm);
-  }, [searchTerm]);
- 
-  // Cleanup : exécuté au démontage
-  useEffect(() => {
-    const timer = setInterval(() => fetchData(), 5000);
-    return () => clearInterval(timer); // nettoyage !
   }, []);
+
+  // Affichage pendant le chargement
+  if (loading) {
+    return <div>Chargement des employés...</div>;
+  }
+
+  // Affichage en cas d'erreur
+  if (error) {
+    return <div>Erreur : {error}</div>;
+  }
+
+    // Affichage du tableau des employés
+  return (
+    <div>
+      <h1>Liste des employés</h1>
+      
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map(employee => (
+            <tr key={employee.id}>
+              <td>{employee.id}</td>
+              <td>{employee.name}</td>
+              <td>{employee.position}</td>
+              <td>{employee.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default EmployeeList;

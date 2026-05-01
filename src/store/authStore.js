@@ -10,29 +10,23 @@ export const useAuthStore = create(
       token: null,
       isAuthenticated: false,
  
-      login: async (email, password) => {
+            login: async (email, password) => {
+        // json-server ne gère pas auth, on simule
         const res = await authApi.login(email, password);
-        if (res.data.length === 0) {
-          throw new Error("Identifiants incorrects");
-        }
-
+        if (res.data.length === 0) throw new Error("Identifiants incorrects");
         const user = res.data[0];
-
-        set({
-          user,
-          token: "mock-token",
-          isAuthenticated: true,
-        });
-
-        localStorage.setItem("erp_token", "mock-token");
+        localStorage.setItem("erp_token", "mock-jwt-token");
+        set({ user, isAuthenticated: true });
+        return user;
       },
  
       logout: () => {
-        set({ user: null, token: null, isAuthenticated: false });
-        localStorage.removeItem("token");
+        localStorage.removeItem("erp_token");
+        set({ user: null, isAuthenticated: false });
       },
     }),
-    { name: "auth-storage" } // persisté dans localStorage
+    { name: "erp-auth" }
   )
 );
+
 
