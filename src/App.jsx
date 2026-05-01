@@ -3,6 +3,7 @@ import  LoginForm from "./pages/Login";
 import {useAuthStore} from "./store/authStore";
 import EmployeeList from "./pages/Employees";
 import MainLayout from "./components/MainLayout";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -16,7 +17,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/employees" element={<EmployeeList />} />
-            <Route path="/" element={<Navigate to="/employees" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             {/* <Route path="/employees/:id" element={<EmployeeDetail />} /> */}
           </Route>
         </Route>

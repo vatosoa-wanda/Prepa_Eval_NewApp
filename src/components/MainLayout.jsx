@@ -17,6 +17,7 @@ function MainLayout() {
       }}>
         <div style={{ display: "flex", gap: "20px" }}>
           <Link to="/employees">Employés</Link>
+          <Link to="/dashboard">Tableau de Bord</Link>
         </div>
         <div>
           <span style={{ marginRight: "10px" }}>Bienvenue, {user?.email || "Utilisateur"}</span>
