@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
  
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchField, setSearchField] = useState("all"); // 'all', 'name', 'role', 'email'
  
   // Chargement des employés au montage du composant
   useEffect(() => {
@@ -26,15 +27,39 @@ function EmployeeList() {
   }, []);
 
   // Filtrer les employés selon le terme de recherche
-  const filteredEmployees = employees.filter(employee => {
+  // const filteredEmployees = employees.filter(employee => {
+  //   const searchLower = searchTerm.toLowerCase();
+  //   return (
+  //     employee.name?.toLowerCase().includes(searchLower) ||
+  //     employee.position?.toLowerCase().includes(searchLower) ||
+  //     employee.email?.toLowerCase().includes(searchLower) ||
+  //     employee.id?.toString().includes(searchLower)
+  //   );
+  // });
+
+    const filteredEmployees = useMemo(() => {
+    if (!searchTerm.trim()) return employees;
+
     const searchLower = searchTerm.toLowerCase();
-    return (
-      employee.name?.toLowerCase().includes(searchLower) ||
-      employee.position?.toLowerCase().includes(searchLower) ||
-      employee.email?.toLowerCase().includes(searchLower) ||
-      employee.id?.toString().includes(searchLower)
-    );
-  });
+    
+    return employees.filter(employee => {
+      switch (searchField) {
+        case "name":
+          return employee.name?.toLowerCase().includes(searchLower);
+        case "role":
+          return employee.role?.toLowerCase().includes(searchLower);
+        case "email":
+          return employee.email?.toLowerCase().includes(searchLower);
+        default:
+          return (
+            employee.name?.toLowerCase().includes(searchLower) ||
+            employee.role?.toLowerCase().includes(searchLower) ||
+            employee.email?.toLowerCase().includes(searchLower) ||
+            employee.id?.toString().includes(searchLower)
+          );
+      }
+    });
+  }, [employees, searchTerm, searchField]);
 
   // Affichage pendant le chargement
   if (loading) {
@@ -88,7 +113,7 @@ function EmployeeList() {
               <tr key={employee.id}>
                 <td style={{ padding: "8px" }}>{employee.id}</td>
                 <td style={{ padding: "8px" }}>{employee.name}</td>
-                <td style={{ padding: "8px" }}>{employee.position}</td>
+                <td style={{ padding: "8px" }}>{employee.role}</td>
                 <td style={{ padding: "8px" }}>{employee.email}</td>
               </tr>
             ))
