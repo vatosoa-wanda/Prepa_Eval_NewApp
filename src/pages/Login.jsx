@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -29,10 +31,31 @@ function LoginForm() {
  
   return (
     <form onSubmit={handleSubmit}>
-      <input value={email} onChange={e => setEmail(e.target.value)} />
-      <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      {error && <p className="error">{error}</p>}
-      <button disabled={loading}>{loading ? "Connexion..." : "Se connecter"}</button>
+      <Input
+        label="Email"
+        type="email"
+        placeholder="Entrez votre email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        required
+      />
+      <Input
+        label="Mot de passe"
+        type="password"
+        placeholder="Entrez votre mot de passe"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        required
+      />
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={loading}
+        loading={loading}
+      >
+        Se connecter
+      </Button>
     </form>
   );
 }

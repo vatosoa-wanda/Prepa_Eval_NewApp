@@ -37,7 +37,8 @@ function EmployeeList() {
   //   );
   // });
 
-    const filteredEmployees = useMemo(() => {
+  // Filtrage optimisé avec useMemo
+  const filteredEmployees = useMemo(() => {
     if (!searchTerm.trim()) return employees;
 
     const searchLower = searchTerm.toLowerCase();

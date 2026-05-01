@@ -11,7 +11,9 @@ function Button({ children, variant = "primary", onClick, disabled, loading }) {
       disabled={disabled || loading}
       className={`px-4 py-2 rounded ${variants[variant]}`}
     >
-      {loading ? <Spinner /> : children}
+      {loading ? "Chargement..." : children}
     </button>
   );
 }
+
+export default Button;
