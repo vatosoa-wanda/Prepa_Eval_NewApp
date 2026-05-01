@@ -16,6 +16,8 @@ function EmployeeList() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
  
   // Fonction pour charger les employés
   const loadEmployees = async () => {
@@ -138,6 +140,21 @@ function EmployeeList() {
     });
   }, [employees, searchTerm, searchField]);
 
+  // Réinitialiser la page quand les résultats de recherche changent
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, searchField]);
+
+  // Calculer les employés paginés
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredEmployees.slice(startIndex, endIndex);
+  }, [filteredEmployees, currentPage, itemsPerPage]);
+
+  // Calculer le nombre total de pages
+  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+
   // Affichage pendant le chargement
   if (loading) {
     return <div>Chargement des employés...</div>;
@@ -245,7 +262,7 @@ function EmployeeList() {
               </td>
             </tr>
           ) :(
-            filteredEmployees.map(employee => (
+            paginatedEmployees.map(employee => (
               <tr key={employee.id}>
                 <td style={{ padding: "8px" }}>{employee.id}</td>
                 <td style={{ padding: "8px" }}>{employee.name}</td>
@@ -277,6 +294,88 @@ function EmployeeList() {
           )}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      {filteredEmployees.length > 0 && (
+        <div className="pagination">
+          <div className="pagination-info">
+            Affichage {(currentPage - 1) * itemsPerPage + 1} à{' '}
+            {Math.min(currentPage * itemsPerPage, filteredEmployees.length)} sur{' '}
+            {filteredEmployees.length} employé(s)
+          </div>
+
+          <div className="pagination-controls">
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              title="Première page"
+            >
+              « Première
+            </button>
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              title="Page précédente"
+            >
+              ‹ Précédent
+            </button>
+
+            {/* Numéros de page */}
+            <div className="pagination-numbers">
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  // Afficher les 5 pages autour de la page actuelle
+                  return Math.abs(page - currentPage) <= 2 || page === 1 || page === totalPages;
+                })
+                .map((page, idx, arr) => {
+                  // Ajouter des points de suspension si nécessaire
+                  const prevPage = idx > 0 ? arr[idx - 1] : 0;
+                  const elements = [];
+
+                  if (page - prevPage > 1) {
+                    elements.push(
+                      <span key={`dots-${page}`} className="pagination-dots">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  elements.push(
+                    <button
+                      key={page}
+                      className={`pagination-number ${page === currentPage ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  );
+
+                  return elements;
+                })
+                .flat()}
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              title="Page suivante"
+            >
+              Suivant ›
+            </button>
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages}
+              title="Dernière page"
+            >
+              Dernière »
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
