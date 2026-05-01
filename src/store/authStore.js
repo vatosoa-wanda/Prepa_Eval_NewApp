@@ -1,28 +1,38 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import api from "../api/axios.config";
- 
+import authApi from "../api/auth.api";
+
 export const useAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
+      token: null,
       isAuthenticated: false,
  
       login: async (email, password) => {
-        // json-server ne gère pas auth, on simule
-        const res = await api.get(`/users?email=${email}&password=${password}`);
-        if (res.data.length === 0) throw new Error("Identifiants incorrects");
+        const res = await authApi.login(email, password);
+        if (res.data.length === 0) {
+          throw new Error("Identifiants incorrects");
+        }
+
         const user = res.data[0];
-        localStorage.setItem("erp_token", "mock-jwt-token");
-        set({ user, isAuthenticated: true });
-        return user;
+
+        set({
+          user,
+          token: "mock-token",
+          isAuthenticated: true,
+        });
+
+        localStorage.setItem("erp_token", "mock-token");
       },
  
       logout: () => {
-        localStorage.removeItem("erp_token");
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, token: null, isAuthenticated: false });
+        localStorage.removeItem("token");
       },
     }),
-    { name: "erp-auth" }
+    { name: "auth-storage" } // persisté dans localStorage
   )
 );
+
