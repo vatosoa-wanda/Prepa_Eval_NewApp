@@ -1,0 +1,6 @@
+name,email,department,role,salary,status
+Jean Dupont,jean.dupont@company.com,IT,Developer,50000,active
+Marie Martin,marie.martin@company.com,RH,Manager,55000,active
+Pierre Bernard,pierre.bernard@company.com,Finance,Analyst,48000,active
+Sophie Leclerc,sophie.leclerc@company.com,IT,Senior Developer,65000,active
+Luc Rousseau,luc.rousseau@company.com,Marketing,Specialist,45000,inactive

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import EmployeeForm from "../components/EmployeeForm";
+import ImportEmployeesForm from "../components/ImportEmployeesForm";
 import { employeesApi } from "../api/employees.api";
 import "../styles/employees.css";
 import Button from "../components/ui/Button";
@@ -11,6 +12,7 @@ function EmployeeList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchField, setSearchField] = useState("all"); // 'all', 'name', 'role', 'email'
   const [showForm, setShowForm] = useState(false);
+  const [showImportForm, setShowImportForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
   const [editingEmployee, setEditingEmployee] = useState(null);
@@ -68,6 +70,16 @@ function EmployeeList() {
   // Fermer le formulaire d'édition
   const handleCancelEdit = () => {
     setEditingEmployee(null);
+  };
+
+  // Gérer le succès de l'import
+  const handleImportSuccess = (result) => {
+    loadEmployees(); // Recharger la liste des employés
+    setShowImportForm(false);
+    setSuccessMessage(`${result.imported || result.length || 0} employé(s) importé(s) avec succès!`);
+
+    // Masquer le message après 3 secondes
+    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   // Supprimer un employé
@@ -152,12 +164,20 @@ function EmployeeList() {
 
       <div className="employees-header">
         <h1>Liste des employés</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="btn-add-employee"
-        >
-          {showForm ? "Masquer le formulaire" : "+ Ajouter un employé"}
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn-add-employee"
+          >
+            {showForm ? "Masquer le formulaire" : "+ Ajouter un employé"}
+          </button>
+          <button
+            onClick={() => setShowImportForm(!showImportForm)}
+            className="btn-import-employee"
+          >
+            {showImportForm ? "Masquer l'import" : "📥 Importer CSV"}
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -175,6 +195,15 @@ function EmployeeList() {
             employee={editingEmployee}
             onSuccess={handleEditSuccess}
             onCancel={handleCancelEdit}
+          />
+        </div>
+      )}
+
+      {showImportForm && (
+        <div className="form-section">
+          <ImportEmployeesForm
+            onSuccess={handleImportSuccess}
+            onCancel={() => setShowImportForm(false)}
           />
         </div>
       )}
