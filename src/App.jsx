@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import  LoginForm from "./pages/Login";
 import {useAuthStore} from "./store/authStore";
+// import EmployeeList from "./pages/Employees";
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -12,11 +13,8 @@ function App() {
         {/* Routes protégées */}
         {/* <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/employees" />} />
             <Route path="/employees" element={<Employees />} />
-            <Route path="/employees/:id" element={<EmployeeDetail />} />
-            <Route path="/products" element={<Products />} />
           </Route>
         </Route> */}
       </Routes>

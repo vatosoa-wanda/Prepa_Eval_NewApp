@@ -25,3 +25,5 @@ function EmployeeList() {
     return () => clearInterval(timer); // nettoyage !
   }, []);
 }
+
+export default EmployeeList;

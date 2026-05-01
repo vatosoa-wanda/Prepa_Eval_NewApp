@@ -1,6 +1,10 @@
 import { useState } from "react";
- 
+import { useAuthStore } from "../store/authStore";
+
 function LoginForm() {
+  const { login } = useAuthStore();
+
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
