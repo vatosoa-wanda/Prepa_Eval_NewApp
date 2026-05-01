@@ -16,6 +16,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/employees" element={<EmployeeList />} />
+            <Route path="/" element={<Navigate to="/employees" replace />} />
             {/* <Route path="/employees/:id" element={<EmployeeDetail />} /> */}
           </Route>
         </Route>

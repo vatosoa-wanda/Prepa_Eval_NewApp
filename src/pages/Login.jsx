@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const { login } = useAuthStore();
 
 
@@ -16,6 +18,8 @@ function LoginForm() {
     setError(null);
     try {
       await login(email, password); // appel API
+      console.log("Connexion réussie, redirection...");
+      navigate("/employees");
     } catch (err) {
       setError(err.message);
     } finally {
